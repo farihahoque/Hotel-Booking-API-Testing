@@ -228,15 +228,12 @@ This project demonstrates API testing using Postman, providing a collection of t
 ## Run Command:  
 - Run Command for Console: 
 ```console 
-newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json 
+newman run Booking_Testing.postman_collection.json -e env1.postman_environment.json
 ```
 - Run Command for Report: 
 ```console 
-newman run Ebrahim_Hossain_SQA.postman_collection.json -e Ebrahim_Hossain_SQA.postman_environment.json -r cli,htmlextra
+newman run Booking_Testing.postman_collection.json -e env1.postman_environment.json -r cli,htmlextra
 ```
 
 ## Newman Report Summary:
-![Newman Report Summary](https://github.com/ebrahimhossaincse/Automated-Testing-of-Rest-Booking-API-with-Newman-Report/assets/152195690/56d08c4a-dfa9-4aa3-8d52-23ccbdf25a10)
-![Newman Report Summary](https://github.com/ebrahimhossaincse/Automated-Testing-of-Rest-Booking-API-with-Newman-Report/assets/152195690/c1680ef6-adc1-4f95-87c5-55a6df798eee)
-![image](https://github.com/ebrahimhossaincse/Automated-Testing-of-Rest-Booking-API-with-Newman-Report/assets/152195690/0e011c95-b3d2-46e1-952b-07938ee0bfa8)
-![Newman Report Summary](https://github.com/ebrahimhossaincse/Automated-Testing-of-Rest-Booking-API-with-Newman-Report/assets/152195690/e5ae708d-6be9-45e8-8996-06a817f13e9d)
+![image](https://github.com/farihahoque/Hotel-Booking-API-Testing/assets/49908132/31a918c7-e8b7-46e4-92bd-d0a0a7e4103c)
