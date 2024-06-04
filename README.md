@@ -237,3 +237,9 @@ newman run Booking_Testing.postman_collection.json -e env1.postman_environment.j
 
 ## Newman Report Summary:
 ![image](https://github.com/farihahoque/Hotel-Booking-API-Testing/assets/49908132/31a918c7-e8b7-46e4-92bd-d0a0a7e4103c)
+![image](https://github.com/farihahoque/Hotel-Booking-API-Testing/assets/49908132/26561510-670e-45f2-8e0e-8768e427043f)
+![image](https://github.com/farihahoque/Hotel-Booking-API-Testing/assets/49908132/de223a06-ac04-47e2-af2f-1f2a29bc36f9)
+![image](https://github.com/farihahoque/Hotel-Booking-API-Testing/assets/49908132/deacc02f-428d-4df8-b778-f17d9527ff31)
+
+
+
