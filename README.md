@@ -1,16 +1,16 @@
 # Hotel-Booking-API-Testing
-This project demonstrates API testing using Postman, providing a collection of tests to validate various endpoints of the API. 
+This project demonstrates API testing using Postman, providing a collection of tests to validate various API endpoints. 
 
 ### **Features**
 
-- Tests for GET, POST, PUT, DELETE requests
+- Tests for GET, POST, PUT,PATCH, DELETE requests
 - Collection of tests covering different API endpoints
 - Environment setup for easy switching between environments
 - Pre-request scripts for data setup
 - Test scripts for assertions and validations
 
 ## API Documentation:
-- https://documenter.getpostman.com/view/13082503/2sA2xmUAJ1
+-https://documenter.getpostman.com/view/34981174/2sA3QzYTSR
   
 ### **Technology used:**
 - Postman
@@ -66,78 +66,186 @@ This project demonstrates API testing using Postman, providing a collection of t
 ### Request Method: POST
 ### Pre-request Script:
 ```console 
-    var firstName = pm.variables.replaceIn("{{$randomFirstName}}")
-    pm.environment.set("firstName", firstName)
-    console.log("First Name Value "+firstName)
-    
-    var lastName = pm.variables.replaceIn("{{$randomLastName}}")
-    pm.environment.set("lastName", lastName)
-    console.log("Last Name Value "+lastName)
-    
-    var totalPrice = pm.variables.replaceIn("{{$randomInt}}")
-    pm.environment.set("totalPrice", totalPrice)
-    console.log(totalPrice)
-    
-    var depositPaid = pm.variables.replaceIn("{{$randomBoolean}}")
-    pm.environment.set("depositPaid", depositPaid)
-    console.log(depositPaid)
-    
-    //Date
-    const moment = require('moment')
-    const today = moment()
-    pm.environment.set("checkin", today.add(1,'d').format("YYYY-MM-DD"))
-    pm.environment.set("checkout",today.add(5,'d').format("YYYY-MM-DD") )
-    
-    var additionalNeeds = pm.variables.replaceIn("{{$randomNoun}}")
-    pm.environment.set("additionalNeeds", additionalNeeds)
+    var firstName=pm.variables.replaceIn('{{$randomFirstName}}')
+console.log(firstName)
+pm.environment.set("firstName",firstName)
+
+var LastName=pm.variables.replaceIn('{{$randomLastName}}')
+console.log(LastName)
+pm.environment.set("LastName",LastName)
+
+var number=Math.floor(Math.random() * 90) + 10;
+var totalprice =pm.variables.replaceIn(number)
+
+console.log(totalprice)
+pm.environment.set("totalprice",totalprice)
+const arr = ["true","false"];
+const randomElement = arr[Math.floor(Math.random() * arr.length)];
+var depositpaid =pm.variables.replaceIn(randomElement)
+console.log(depositpaid)
+pm.environment.set("depositpaid",depositpaid)
+
+const moment =require('moment')
+const today = moment()
+
+var checkIn= today.format("YYYY-MM-DD")
+pm.environment.set('checkIn',checkIn)
+
+var checkOut= today.format("YYYY-MM-DD")
+pm.environment.set('checkOut',checkOut)
+
+var additionalneed=pm.variables.replaceIn('{{$randomProduct}}')
+console.log(additionalneed)
+pm.environment.set("additionalneed",additionalneed)
 ```
   **Request Body:** 
  ```console 
-  {
-	  "firstname" : "{{firstName}}",
-	  "lastname" : "{{lastName}}",
-	  "totalprice" : {{totalPrice}},
-	  "depositpaid" : {{depositPaid}},
-	  "bookingdates" : {
-    	  "checkin" : "{{checkin}}",
-    	  "checkout" : "{{checkout}}"
-	  },
-	  "additionalneeds" : "{{additionalNeeds}}"
-  }
+  
+{
+	"firstname": "{{firstName}}",
+	"lastname": "{{LastName}}",
+	"totalprice": {{totalprice}},
+	"depositpaid": {{depositpaid}},
+	"bookingdates": {
+    	"checkin": "{{checkIn}}",
+    	"checkout": "{{checkOut}}"
+	},
+	"additionalneeds": "{{additionalneed}}"
+}
+
 ```
   **Response Body:**
  ```console 
-  {
-      "bookingid": 4334,
-      "booking": {
-          "firstname": "Joelle",
-          "lastname": "Krajcik",
-          "totalprice": 266,
-          "depositpaid": true,
-          "bookingdates": {
-              "checkin": "2024-03-15",
-              "checkout": "2024-03-20"
-          },
-          "additionalneeds": "monitor"
-      }
-  }
+{
+    "bookingid": 1419,
+    "booking": {
+        "firstname": "Mohamed",
+        "lastname": "Orn",
+        "totalprice": 78,
+        "depositpaid": false,
+        "bookingdates": {
+            "checkin": "2024-06-04",
+            "checkout": "2024-06-04"
+        },
+        "additionalneeds": "Ball"
+    }
+}
+```
+### Post-Request Script:
+```console 
+   var jsonData=pm.response.json()
+pm.environment.set("id",jsonData.bookingid)
+
+pm.test('Verify status code',function(){
+    pm.response.to.have.status(200);
+})
+
+pm.test('first name validation',function(){
+    pm.expect(jsonData.booking.firstname).to.eql(pm.environment.get('firstName'))
+    pm.response.to.have.status(200);
+})
+
+pm.test('last name validation',function(){
+    pm.expect(jsonData.booking.lastname).to.eql(pm.environment.get('LastName'))
+})
+
+pm.test('price validation',function(){
+    pm.expect(jsonData.booking.totalprice).to.eql(parseInt(pm.environment.get('totalprice')))
+    
+})
+
+pm.test('depositpaid validation',function(){
+    console.log(jsonData.booking.depositpaid)
+    console.log(pm.environment.get('depositpaid'))
+    pm.expect(jsonData.booking.depositpaid).to.eql(JSON.parse(pm.environment.get('depositpaid')))
+})
+
+pm.test('checkIn validation',function(){
+    pm.expect(jsonData.booking.bookingdates.checkin).to.eql(pm.environment.get('checkIn'))
+})
+
+pm.test('checkOut validation',function(){
+    pm.expect(jsonData.booking.bookingdates.checkout).to.eql(pm.environment.get('checkOut'))
+})
+
+pm.test('additionalneed validation',function(){
+    pm.expect(jsonData.booking.additionalneeds).to.eql(pm.environment.get('additionalneed'))
+})
+
 ```
  ## _**2. Get Booking Details By ID**_
-### Request URL: https://restful-booker.herokuapp.com/booking/bookingid
+### Request URL: https://restful-booker.herokuapp.com/booking/id
 ### Request Method: GET
 ### Response Body:
  ```console 
 {
-    "firstname": "D'angelo",
-    "lastname": "Feeney",
-    "totalprice": 757,
-    "depositpaid": true,
+    "firstname": "Mohamed",
+    "lastname": "Orn",
+    "totalprice": 78,
+    "depositpaid": false,
     "bookingdates": {
-        "checkin": "2024-03-15",
-        "checkout": "2024-03-20"
+        "checkin": "2024-06-04",
+        "checkout": "2024-06-04"
     },
-    "additionalneeds": "hard drive"
+    "additionalneeds": "Ball"
 }
+```
+### Post-Request Script:
+```console 
+ var status = pm.response.code;
+var jsonData = pm.response.json();
+
+
+switch (status) {
+    case 200:
+   
+        pm.test('Verify status code', function () {
+            pm.response.to.have.status(200);
+        });
+
+        pm.test("first name validation", function () {
+            pm.expect(jsonData.firstname).to.eql(pm.environment.get('firstName'));
+        });
+
+        pm.test("last name validation", function () {
+            pm.expect(jsonData.lastname).to.eql(pm.environment.get('LastName'));
+        });
+
+        pm.test('totalprice validation', function () {
+            console.log(jsonData.totalprice)
+            console.log(pm.environment.get('totalprice'))
+            pm.expect(jsonData.totalprice).to.eql(parseInt(pm.environment.get('totalprice')));
+        });
+
+        pm.test('depositpaid validation', function () {
+            console.log(jsonData.depositpaid.toString())
+            console.log(pm.environment.get('depositPaid'))
+            pm.expect(jsonData.depositpaid.toString()).to.eql((pm.environment.get('depositpaid')));
+        });
+
+        pm.test('checkIn validation', function () {
+            pm.expect(jsonData.bookingdates.checkin).to.eql(pm.environment.get('checkIn'));
+        });
+
+        pm.test('checkOut validation', function () {
+            pm.expect(jsonData.bookingdates.checkout).to.eql(pm.environment.get('checkOut'));
+        });
+
+        pm.test('additionalneed validation', function () {
+            pm.expect(jsonData.additionalneeds).to.eql(pm.environment.get('additionalneed'));
+        });
+         
+        break;
+
+    case 404:
+        pm.test('not found');
+        break;
+
+    case 400:
+        pm.test('bad request');
+        break;
+}
+
 ```
 ## _**3. Create A Token For Authentication.**_
 ### Request URL: https://restful-booker.herokuapp.com/auth
@@ -153,75 +261,103 @@ This project demonstrates API testing using Postman, providing a collection of t
   **Response Body:**
  ```console 
 {
-    "token": "06eb798bf6f2caa"
+    "token": "91ed0feec9226c0"
 }
 ```
 
+
  ## _**4. Update the Booking Details**_
-### Request URL: https://restful-booker.herokuapp.com/booking/bookingid
+### Request URL: https://restful-booker.herokuapp.com/booking/id
 ### Request Method: PUT
-### Pre-request Script:
-```console 
-    var firstName = pm.variables.replaceIn("{{$randomFirstName}}")
-    pm.environment.set("firstName", firstName)
-    console.log("First Name Value "+firstName)
-    
-    var lastName = pm.variables.replaceIn("{{$randomLastName}}")
-    pm.environment.set("lastName", lastName)
-    console.log("Last Name Value "+lastName)
-    
-    var totalPrice = pm.variables.replaceIn("{{$randomInt}}")
-    pm.environment.set("totalPrice", totalPrice)
-    console.log(totalPrice)
-    
-    var depositPaid = pm.variables.replaceIn("{{$randomBoolean}}")
-    pm.environment.set("depositPaid", depositPaid)
-    console.log(depositPaid)
-    
-    //Date
-    const moment = require('moment')
-    const today = moment()
-    pm.environment.set("checkin", today.add(1,'d').format("YYYY-MM-DD"))
-    pm.environment.set("checkout",today.add(5,'d').format("YYYY-MM-DD") )
-    
-    var additionalNeeds = pm.variables.replaceIn("{{$randomNoun}}")
-    pm.environment.set("additionalNeeds", additionalNeeds)
-```
+
   **Request Body:** 
- ```console 
-  {
-	  "firstname" : "{{firstName}}",
-	  "lastname" : "{{lastName}}",
-	  "totalprice" : {{totalPrice}},
-	  "depositpaid" : {{depositPaid}},
-	  "bookingdates" : {
-    	  "checkin" : "{{checkin}}",
-    	  "checkout" : "{{checkout}}"
-	  },
-	  "additionalneeds" : "{{additionalNeeds}}"
-  }
+ ```console   {
+    "firstname": "mimma",
+    "lastname": "hoque",
+    "totalprice": 1167798,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2013-02-23",
+        "checkout": "2014-10-23"
+    },
+    "additionalneeds": "Breakfast"
+}
 ```
   **Response Body:**
  ```console 
-  {
-      "bookingid": 4334,
-      "booking": {
-          "firstname": "Joelle",
-          "lastname": "Krajcik",
-          "totalprice": 266,
-          "depositpaid": true,
-          "bookingdates": {
-              "checkin": "2024-03-15",
-              "checkout": "2024-03-20"
-          },
-          "additionalneeds": "monitor"
-      }
-  }
+{
+    "firstname": "mimma",
+    "lastname": "hoque",
+    "totalprice": 1167798,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2013-02-23",
+        "checkout": "2014-10-23"
+    },
+    "additionalneeds": "Breakfast"
+}
+```
+ ## _**4. Update a particular Booking Detail**_
+### Request URL: https://restful-booker.herokuapp.com/booking/id
+### Request Method: PATCH
+
+  **Request Body:** 
+ ```console   {
+{
+    "firstname": "jubayer"
+    
+}
+```
+  **Response Body:**
+ ```console
+{
+    "firstname": "jubayer",
+    "lastname": "hoque",
+    "totalprice": 1167798,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2013-02-23",
+        "checkout": "2014-10-23"
+    },
+    "additionalneeds": "Breakfast"
+}
+```
+ ## _**4. Check after Updating Detail**_
+### Request URL: https://restful-booker.herokuapp.com/booking/id
+### Request Method: GET
+
+  **Response Body:**
+ ```console
+{
+    "firstname": "jubayer",
+    "lastname": "hoque",
+    "totalprice": 1167798,
+    "depositpaid": true,
+    "bookingdates": {
+        "checkin": "2013-02-23",
+        "checkout": "2014-10-23"
+    },
+    "additionalneeds": "Breakfast"
+}
 ```
 
+  **Post-Request Script:** 
+ ```console   {
+var status = pm.response.code;
+console.log(status);
+var jsonData= pm.response.json
+
+pm.test('first name validation',function(){
+    pm.expect(pm.environment.get('firstname')).to.eql(jsonData.firstname)
+})
+
+pm.test('last name validation',function(){
+    pm.expect(pm.environment.get('lastname')).to.eql(jsonData.lastname)
+})
+```
  ## _**5. Delete Booking Record**_
 
-### Request URL: https://restful-booker.herokuapp.com/booking/bookingid
+### Request URL: https://restful-booker.herokuapp.com/booking/id
 ### Request Method: DELETE
 ### Response Body: None 
 
