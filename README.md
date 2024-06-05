@@ -297,7 +297,7 @@ switch (status) {
     "additionalneeds": "Breakfast"
 }
 ```
- ## _**4. Update a particular Booking Detail**_
+ ## _**5. Update a particular Booking Detail**_
 ### Request URL: https://restful-booker.herokuapp.com/booking/id
 ### Request Method: PATCH
 
@@ -322,7 +322,7 @@ switch (status) {
     "additionalneeds": "Breakfast"
 }
 ```
- ## _**4. Check after Updating Detail**_
+ ## _**6. Check after Updating Detail**_
 ### Request URL: https://restful-booker.herokuapp.com/booking/id
 ### Request Method: GET
 
@@ -355,7 +355,7 @@ pm.test('last name validation',function(){
     pm.expect(pm.environment.get('lastname')).to.eql(jsonData.lastname)
 })
 ```
- ## _**5. Delete Booking Record**_
+ ## _**7. Delete Booking Record**_
 
 ### Request URL: https://restful-booker.herokuapp.com/booking/id
 ### Request Method: DELETE
